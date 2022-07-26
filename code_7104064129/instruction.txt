@@ -1,0 +1,154 @@
+code_7104064129_cascadecnn
+
+trained model\phase 1:
+ph11.mat : 訓練好的classifier model
+ph1g1.mat: 第1組的regressor model
+ph1g2.mat: 第2組的regressor model
+ph1g3.mat: 第3組的regressor model
+ph1g4.mat: 第4組的regressor model
+
+
+trained model\phase 2:
+ph21.mat : 訓練好的classifier model
+ph2g1.mat: 第1組的regressor model
+ph2g2.mat: 第2組的regressor model
+ph2g3.mat: 第3組的regressor model
+ph2g4.mat: 第4組的regressor model
+
+
+trained model\MCL:
+mcl1.mat : 訓練好的classifier model
+mclg1.mat: 第1組的regressor model
+mclg2.mat: 第2組的regressor model
+mclg3.mat: 第3組的regressor model
+mclg4.mat: 第4組的regressor model
+
+
+
+將cnn_train.m 以及vl_simplenn.m 覆蓋至matconvnet套件包中
+
+
+cnn_train.m 
+第23行 opts.expDir = fullfile(vl_rootnn, '存放模型的路徑') ;
+第30行 opts.gpus = 1(1使用GPU,0的時候使用CPU) ;
+第32行到34行 
+opts.numEpochs = 50;          %疊代次數
+opts.learningRate =0.000001;  %學習速率
+opts.weightDecay = 0.00005;   %衰減參數
+第43行 opts.errorFunction = 'multiclass' ; %multiclass 是classifier時使用的損失函數
+					   %bo 是regressor時使用的損失函數
+第282行 
+function err = error_bo(opts, labels, res) %二進制損失函數
+第284行
+l = de2bin((labels),4); % phase 1第四組時改為l = de2bin((labels),5);
+
+
+vl_simplenn.m
+訓練時 將第221行改寫為 opts.mode = 'normal' ;
+測試時 將第221行改寫為 opts.mode = 'test' ;
+
+
+cnn_cla.m  %第一階段分組的主程式, 對應firstsmx網路
+第15行 影像資料路徑
+第19行 影像資料名稱
+
+
+cnn_reg1.m LIVE phase1,2, MCL的預測分數主程式(除了phase 1 第四組)
+搭配reg1 網路
+第15行 影像資料路徑
+第19行 影像資料名稱
+
+
+cnn_reg4.m LIVE phase 1 第四組預測分數主程式
+搭配reg4網路
+第15行 影像資料路徑
+第19行 影像資料名稱
+
+
+tee.m
+二進制損失函數
+
+
+de2bin.m
+10進制轉二進制, d為10進制輸入, c為轉換成的二進制位元數(c=3or4or5)
+
+
+
+single資料夾中為單一資料庫的結果程式
+
+classifier:
+
+rp1.m: 輸入資料,計算LIVE phase1 的結果(前部分)
+rrp1.m: 計算LIVE phase1 的分數以及表現(後部分)
+
+rp2.m: 輸入資料,計算LIVE phase2 的結果(前部分)
+rrp2.m: 計算LIVE phase2 的分數以及表現(後部分)
+
+rmcl.m: 輸入資料,計算MCL 的結果(前部分)
+rrmcl.m: 計算LMCL 的分數以及表現(後部分)
+
+rgdata.m: 依照組別重組圖像
+
+
+regressor:
+
+rlive.m: 輸入資料,計算 LIVE 的結果(前部分), 調整參數,適用於phase1和2
+rrlive.m:計算 LIVE 的分數以及表現(後部分), 調整參數,適用於phase1和2
+
+rmcl.m:輸入資料,計算MCL 的結果(前部分)
+rrmcl.m:計算LMCL 的分數以及表現(後部分)
+
+
+
+cross資料夾中為交叉驗證的結果程式
+
+classifier:
+
+reph1.m 為live phase1的前部分
+reeph1.m 為live phase1的後部分
+
+reph2.m 為live phase2的前部分
+reeph2.m 為live phase2的後部分
+
+remcl.m 為live phase1的前部分
+reemcl.m 為live phase1的後部分
+
+refa.m 依照分組結果 重組圖像資料
+
+
+regressor/ph1:
+
+ph11.m phase1第一組前部分
+ph12.m phase1第二組前部分
+ph13.m phase1第三組前部分
+ph14.m phase1第四組前部分
+
+re1.m phase1第一組後部分
+re2.m phase1第二組後部分
+re3.m phase1第三組後部分
+re4.m phase1第四組後部分
+
+regressor/ph2:
+
+ph21.m phase2第一組前部分
+ph22.m phase2第二組前部分
+ph23.m phase2第三組前部分
+ph24.m phase2第四組前部分
+
+r1.m phase2第一組後部分
+r2.m phase2第二組後部分
+r3.m phase2第三組後部分
+r4.m phase2第四組後部分
+
+
+regressor/mcl:
+
+reMCL1.m MCL第一組前部分
+reMCL2.m MCL第二組前部分
+reMCL3.m MCL第三組前部分
+reMCL4.m MCL第四組前部分
+
+re1.m MCL第一組後部分
+re2.m MCL第二組後部分
+re3.m MCL第三組後部分
+re4.m MCL第四組後部分
