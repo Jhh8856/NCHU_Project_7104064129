@@ -33,6 +33,7 @@ seed=54321
 import efficientnet
 from efficientnet.efficientnet import tfkeras as efn
 firstsmx = efn.EfficientNetB0(weights=None, classes=4)
+#firstsmx = efn.EfficientNetB1(weights=None, classes=4)
 
 firstsmx.summary()
 
