@@ -76,7 +76,7 @@ regress.summary()
 
 # CC = binary_loss.PLCC
 # bce = tf.keras.losses.BinaryCrossentropy()
-binloss = binary_loss.binloss
+#binloss = binary_loss.binloss
 wbinloss = binary_loss.binloss
 rmse = tf.keras.metrics.RootMeanSquaredError()
 
